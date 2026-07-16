@@ -100,17 +100,16 @@ public class NettyServer implements ApplicationListener<ContextClosedEvent>{
 	}
 
 	public void shutdownNetty() {
-		log.info("shutting down worker ... ");
-		if(worker!=null) {
-			worker.shutdownGracefully(5,30,TimeUnit.SECONDS);
-		}
-		log.info("shut down finished worker");
-
-		log.info("shutting down boss ... ");
+		log.info("shutting down boss (stop accepting new connections) ...");
 		if(boss!=null) {
 			boss.shutdownGracefully(5,30,TimeUnit.SECONDS);
 		}
-		log.info("shut down finished boss");
+		log.info("boss shutdown finished");
 
+		log.info("shutting down worker (wait for in-flight requests) ...");
+		if(worker!=null) {
+			worker.shutdownGracefully(5,30,TimeUnit.SECONDS);
+		}
+		log.info("worker shutdown finished");
 	}
 }
